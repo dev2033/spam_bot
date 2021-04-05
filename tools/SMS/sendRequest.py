@@ -27,16 +27,16 @@ def transformPhone(phone, i):
     # Pizzahut
     if i == 5:
         return (
-            "+"
-            + phone[0]
-            + " ("
-            + phone[1:4]
-            + ") "
-            + phone[4:7]
-            + " "
-            + phone[7:9]
-            + " "
-            + phone[9:11]
+                "+"
+                + phone[0]
+                + " ("
+                + phone[1:4]
+                + ") "
+                + phone[4:7]
+                + " "
+                + phone[7:9]
+                + " "
+                + phone[9:11]
         )  # '+7 (915) 350 99 08'
 
 
@@ -49,6 +49,7 @@ headers = {
     "Accept-Encoding": "gzip, deflate, br",
     "User-agent": randomData.random_useragent(),
 }
+
 
 # Service class
 # parseData, SendSMS
@@ -95,7 +96,8 @@ class Service:
         # Add custom headers
         if "headers" in self.service:
             customHeaders = self.service["headers"]
-            for key, value in json.loads(customHeaders.replace("'", '"')).items():
+            for key, value in json.loads(
+                    customHeaders.replace("'", '"')).items():
                 headers[key] = value
 
         # Create suffixes
@@ -116,7 +118,8 @@ class Service:
         try:
             request = request.prepare()
             r = session.send(request, timeout=self.timeout, proxies=self.proxy)
-        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout):
+        except (
+        requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout):
             print(f"{Fore.RED}[CONNECTION TIMED OUT] {error}")
         except requests.exceptions.ConnectionError:
             print(f"{Fore.RED}[CONNECTION ERROR] {error}")

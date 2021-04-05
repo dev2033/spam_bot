@@ -5,8 +5,8 @@ import json
 from colorama import Fore
 from getpass import getpass, getuser
 from smtplib import SMTPAuthenticationError, SMTP
-# https://github.com/LimerBoy/Twilight-Algoritm
 from tools.addons.twilight.twilight import Decrypt, Encrypt
+
 
 # File with login data
 sender_email_database = "tools/EMAIL/sender.json"
@@ -39,7 +39,8 @@ def WriteSenderEmail():
         )
 
     # Saved data to db?
-    confirm = input(f"{Fore.BLUE}[?] {Fore.MAGENTA}Should this information be retained for future reference? (y/n) : {Fore.BLUE}")
+    confirm = input(f"{Fore.BLUE}[?] {Fore.MAGENTA}Should this information "
+                    f"be retained for future reference? (y/n) : {Fore.BLUE}")
     confirm = confirm.upper() in ("Y", "YES", "1", "TRUE")
     if confirm:
         # Write database

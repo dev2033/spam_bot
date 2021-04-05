@@ -21,7 +21,8 @@ def __isCloudFlare(link):
         for i in range(len(ipv4)):
             if ipaddress.ip_address(origin) in ipaddress.ip_network(ipv4[i]):
                 print(
-                    f"{Fore.RED}[!] {Fore.YELLOW}The site is protected by CloudFlare, attacks may not produce results.{Fore.RESET}"
+                    f"{Fore.RED}[!] {Fore.YELLOW}The site is protected by "
+                    f"CloudFlare, attacks may not produce results.{Fore.RESET}"
                 )
                 sleep(1)
     except socket.gaierror:

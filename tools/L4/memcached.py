@@ -25,9 +25,12 @@ def flood(target):
         send(packet, count=packets, verbose=False)
     except Exception as e:
         print(
-            f"{Fore.MAGENTA}Error while sending forged UDP packet\n{Fore.MAGENTA}{e}{Fore.RESET}"
+            f"{Fore.MAGENTA}Error while sending forged "
+            f"UDP packet\n{Fore.MAGENTA}{e}{Fore.RESET}"
         )
     else:
         print(
-            f"{Fore.GREEN}[+] {Fore.YELLOW}Sending {packets} forged UDP packets from memcached server {server} to {'{}:{}'.format(*target)}.{Fore.RESET}"
+            f"{Fore.GREEN}[+] {Fore.YELLOW}Sending {packets} "
+            f"forged UDP packets from memcached server "
+            f"{server} to {'{}:{}'.format(*target)}.{Fore.RESET}"
         )

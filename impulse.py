@@ -1,18 +1,13 @@
 import os
-import sys
-import argparse
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.utils import executor
+from aiogram.utils.exceptions import NetworkError, TerminatedByOtherGetUpdates
 
-from loader import dp, bot
-from states import SpamState
-from tools.crash import CriticalError
-import tools.addons.clean
-import tools.addons.logo
-import tools.addons.winpcap
-from tools.keyboards import select_keyboard
+from loader import dp
+from tools.states import SpamState
+from tools.keyboards import select_keyboard, start_spam, stop_spam
 from tools.method import AttackMethod
 
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -26,7 +21,7 @@ async def cmd_start(message: types.Message):
                          reply_markup=select_keyboard())
 
 
-@dp.message_handler(lambda message: message.text == 'Спам'.lower())
+@dp.message_handler(lambda message: message.text == start_spam)
 async def get_method(message: types.Message):
     await message.answer('Введите метод (HTTP, SMS)',
                          reply_markup=select_keyboard())
@@ -37,7 +32,7 @@ async def get_method(message: types.Message):
 async def add_method(message: types.Message, state: FSMContext):
     global method
     method = message.text.upper()
-    if message.text == 'Стоп'.lower():
+    if message.text == stop_spam:
         await state.reset_state()
         await message.answer('Атака прервана!', reply_markup=select_keyboard())
     else:
@@ -51,7 +46,7 @@ async def add_method(message: types.Message, state: FSMContext):
 async def add_time(message: types.Message, state: FSMContext):
     global target
     target = message.text
-    if message.text == 'Стоп'.lower():
+    if message.text == stop_spam:
         await state.reset_state()
         await message.answer('Атака прервана!', reply_markup=select_keyboard())
     else:
@@ -65,7 +60,7 @@ async def add_time(message: types.Message, state: FSMContext):
 async def add_threads(message: types.Message, state: FSMContext):
     global time
     time = message.text
-    if message.text == 'Стоп'.lower():
+    if message.text == stop_spam:
         await state.reset_state()
         await message.answer('Атака прервана!', reply_markup=select_keyboard())
     else:
@@ -79,7 +74,7 @@ async def add_threads(message: types.Message, state: FSMContext):
 async def add_threads(message: types.Message, state: FSMContext):
     global threads
     threads = message.text
-    if message.text == 'Стоп'.lower():
+    if message.text == stop_spam:
         await state.reset_state()
         await message.answer('Атака прервана!', reply_markup=select_keyboard())
     else:
@@ -89,7 +84,7 @@ async def add_threads(message: types.Message, state: FSMContext):
                                  f'1️⃣  Метод: {method};\n'
                                  f'2️⃣  Цель: {target};\n'
                                  f'3️⃣  Кол-во потоков: {threads}\n'
-                                 f'4️⃣  Время спама: {time}\n\n',
+                                 f'4️⃣  Время спама: {time} секунд\n\n',
                                  reply_markup=select_keyboard())
 
             with AttackMethod(
@@ -106,4 +101,10 @@ async def add_threads(message: types.Message, state: FSMContext):
 
 
 if __name__ == "__main__":
-    executor.start_polling(dp, skip_updates=True)
+    try:
+        print('Start bot')
+        executor.start_polling(dp, skip_updates=True)
+        if TerminatedByOtherGetUpdates:
+            raise TerminatedByOtherGetUpdates(message='Бот уже запущен на другой тачке!')
+    except NetworkError:
+        print('Проблема с Интернетом!')

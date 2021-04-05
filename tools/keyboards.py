@@ -1,8 +1,8 @@
 from aiogram.types import ReplyKeyboardMarkup
 
 
-start_spam = 'Спам'.lower()
-stop_spam = 'Стоп'.lower()
+start_spam = 'Спам'
+stop_spam = 'Стоп'
 
 
 def select_keyboard():
