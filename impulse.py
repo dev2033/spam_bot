@@ -101,10 +101,4 @@ async def add_threads(message: types.Message, state: FSMContext):
 
 
 if __name__ == "__main__":
-    try:
-        print('Start bot')
-        executor.start_polling(dp, skip_updates=True)
-        if TerminatedByOtherGetUpdates:
-            raise TerminatedByOtherGetUpdates(message='Бот уже запущен на другой тачке!')
-    except NetworkError:
-        print('Проблема с Интернетом!')
+    executor.start_polling(dp, skip_updates=True)
